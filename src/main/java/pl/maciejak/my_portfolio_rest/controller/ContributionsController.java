@@ -20,7 +20,7 @@ public class ContributionsController {
     }
 
     @PostMapping("/contributions")
-    public ResponseEntity<?> post(@RequestBody YearRange range) {
+    public ResponseEntity<?> contributions(@RequestBody YearRange range) {
         return contributionsService.getContributions(range);
     }
 
