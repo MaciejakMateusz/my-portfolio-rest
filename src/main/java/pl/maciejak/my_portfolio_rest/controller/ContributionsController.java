@@ -6,33 +6,28 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.maciejak.my_portfolio_rest.pojo.YearRange;
-import pl.maciejak.my_portfolio_rest.service.interfaces.PortfolioService;
+import pl.maciejak.my_portfolio_rest.service.interfaces.ContributionsService;
 
 @Slf4j
 @RestController
 @RequestMapping("/api")
-public class PortfolioController {
+public class ContributionsController {
 
-    private final PortfolioService portfolioService;
+    private final ContributionsService contributionsService;
 
-    public PortfolioController(PortfolioService portfolioService) {
-        this.portfolioService = portfolioService;
-    }
-
-    @GetMapping("/get")
-    public ResponseEntity<?> get() {
-        return ResponseEntity.ok(portfolioService.get());
+    public ContributionsController(ContributionsService contributionsService) {
+        this.contributionsService = contributionsService;
     }
 
     @PostMapping("/contributions")
     public ResponseEntity<?> post(@RequestBody YearRange range) {
-        return portfolioService.getContributions(range);
+        return contributionsService.getContributions(range);
     }
 
     @RequestMapping(method = RequestMethod.OPTIONS)
     public ResponseEntity<Void> options() {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Allow", "GET, POST, OPTIONS");
+        headers.add("Allow", "POST, OPTIONS");
         return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 }
