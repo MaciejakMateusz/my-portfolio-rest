@@ -7,12 +7,12 @@ import pl.maciejak.my_portfolio_rest.service.interfaces.ContributionsService;
 import pl.maciejak.my_portfolio_rest.util.ContributionsAggregator;
 
 @Service
-public class ContributionsServiceImp implements ContributionsService {
+public class ContributionsServiceImpl implements ContributionsService {
 
 
     private final ContributionsAggregator contributionsAggregator;
 
-    public ContributionsServiceImp(ContributionsAggregator contributionsAggregator) {
+    public ContributionsServiceImpl(ContributionsAggregator contributionsAggregator) {
         this.contributionsAggregator = contributionsAggregator;
     }
 
