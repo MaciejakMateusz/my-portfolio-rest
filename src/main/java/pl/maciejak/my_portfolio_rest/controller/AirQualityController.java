@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.maciejak.my_portfolio_rest.service.interfaces.AirQualityService;
 
+import java.util.Map;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/aq")
@@ -30,8 +32,8 @@ public class AirQualityController {
     }
 
     @PostMapping("/measurements")
-    public ResponseEntity<?> measurements(@RequestBody Integer locationId) {
-        return aqService.getMeasurements(locationId);
+    public ResponseEntity<?> measurements(@RequestBody Map<String, String> params) {
+        return aqService.getMeasurements(params);
     }
 
     @RequestMapping(method = RequestMethod.OPTIONS)
