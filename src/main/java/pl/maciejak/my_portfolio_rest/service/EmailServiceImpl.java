@@ -1,19 +1,15 @@
 package pl.maciejak.my_portfolio_rest.service;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import pl.maciejak.my_portfolio_rest.service.interfaces.EmailService;
 
 import java.util.Map;
 
-@Component
-@Getter
-@Setter
+@Service
 public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender emailSender;
