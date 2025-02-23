@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.maciejak.my_portfolio_rest.service.interfaces.TranslationsService;
 
 import java.util.Map;
 
@@ -13,11 +14,15 @@ import java.util.Map;
 @RequestMapping("/api/translate")
 public class TranslationsController {
 
+    private final TranslationsService translationsService;
+
+    public TranslationsController(TranslationsService translationsService) {
+        this.translationsService = translationsService;
+    }
+
     @PostMapping
-    public ResponseEntity<?> translate(@RequestBody Map<String, String> params) {
-        String origin = params.get("origin");
-        String destination = params.get("destination");
-        return ResponseEntity.ok(origin + "," + destination);
+    public ResponseEntity<?> translate(@RequestBody Map<String, Object> params) {
+        return translationsService.translate(params);
     }
 
     @RequestMapping(method = RequestMethod.OPTIONS)
