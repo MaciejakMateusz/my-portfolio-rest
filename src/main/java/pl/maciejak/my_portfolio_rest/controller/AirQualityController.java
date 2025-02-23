@@ -1,5 +1,6 @@
 package pl.maciejak.my_portfolio_rest.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,15 +12,11 @@ import java.util.Map;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/aq")
 public class AirQualityController {
 
     private final AirQualityService aqService;
-
-    public AirQualityController(AirQualityService aqService) {
-        this.aqService = aqService;
-    }
-
 
     @GetMapping("/countries")
     public ResponseEntity<?> countries() {

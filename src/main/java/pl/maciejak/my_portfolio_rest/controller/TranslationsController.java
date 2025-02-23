@@ -1,5 +1,6 @@
 package pl.maciejak.my_portfolio_rest.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -11,14 +12,11 @@ import java.util.Map;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/translate")
 public class TranslationsController {
 
     private final TranslationsService translationsService;
-
-    public TranslationsController(TranslationsService translationsService) {
-        this.translationsService = translationsService;
-    }
 
     @PostMapping
     public ResponseEntity<?> translate(@RequestBody Map<String, Object> params) {

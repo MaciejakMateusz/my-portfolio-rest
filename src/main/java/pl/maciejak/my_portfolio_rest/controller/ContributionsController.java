@@ -1,5 +1,6 @@
 package pl.maciejak.my_portfolio_rest.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,14 +11,11 @@ import pl.maciejak.my_portfolio_rest.service.interfaces.ContributionsService;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class ContributionsController {
 
     private final ContributionsService contributionsService;
-
-    public ContributionsController(ContributionsService contributionsService) {
-        this.contributionsService = contributionsService;
-    }
 
     @PostMapping("/contributions")
     public ResponseEntity<?> contributions(@RequestBody YearRange range) {

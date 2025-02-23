@@ -1,5 +1,6 @@
 package pl.maciejak.my_portfolio_rest.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -10,16 +11,13 @@ import pl.maciejak.my_portfolio_rest.service.interfaces.EmailService;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender emailSender;
 
     @Value("${mail.contact}")
     private String contactMail;
-
-    public EmailServiceImpl(JavaMailSender emailSender) {
-        this.emailSender = emailSender;
-    }
 
     @Override
     public ResponseEntity<?> send(Map<String, String> params) {
