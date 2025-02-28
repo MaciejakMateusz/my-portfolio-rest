@@ -66,10 +66,10 @@ public class EmailServiceImpl implements EmailService {
                             background-color: #f9f9f9;
                             color: #202124;
                             line-height: 1.6;
+                            overflow-y: hidden;
                         }
                         .email-wrapper {
                             width: 100%%;
-                            padding: 20px;
                         }
                         .container {
                             max-width: 600px;
