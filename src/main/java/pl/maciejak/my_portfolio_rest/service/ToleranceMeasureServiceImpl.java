@@ -6,12 +6,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import pl.maciejak.my_portfolio_rest.dto.MeasurementStatistics;
+import pl.maciejak.my_portfolio_rest.dto.MeasurementAnalysis;
 import pl.maciejak.my_portfolio_rest.dto.MeasurementsDTO;
 import pl.maciejak.my_portfolio_rest.service.interfaces.ToleranceMeasureService;
 import pl.maciejak.my_portfolio_rest.util.MeasurementCalculator;
 import pl.maciejak.my_portfolio_rest.util.MeasurementReportBuilder;
 import pl.maciejak.my_portfolio_rest.util.PdfGenerator;
+
+import java.util.Base64;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -24,15 +27,16 @@ public class ToleranceMeasureServiceImpl implements ToleranceMeasureService {
 
     @Override
     public ResponseEntity<?> calculate(MeasurementsDTO measurementsDTO) {
-        MeasurementStatistics stats = measurementCalculator.calculate(measurementsDTO);
-        String reportContent = reportBuilder.buildReport(measurementsDTO, stats);
+        MeasurementAnalysis analysis = measurementCalculator.calculate(measurementsDTO);
+        String reportContent = reportBuilder.buildReport(measurementsDTO, analysis);
         byte[] pdfBytes = pdfGenerator.generatePdf(reportContent);
+        String base64Pdf = Base64.getEncoder().encodeToString(pdfBytes);
+
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDispositionFormData("attachment", "measurement_report.pdf");
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
         return ResponseEntity.ok()
                 .headers(headers)
-                .body(pdfBytes);
+                .body(Map.of("pdf", base64Pdf, "analysis", analysis));
     }
 }
