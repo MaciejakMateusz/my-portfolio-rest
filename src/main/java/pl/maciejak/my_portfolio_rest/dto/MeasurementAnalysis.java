@@ -1,15 +1,21 @@
 package pl.maciejak.my_portfolio_rest.dto;
 
-public record MeasurementAnalysis(int totalCount,
-                                  double average,
-                                  double lowerBound,
-                                  double upperBound,
+import java.math.BigDecimal;
+import java.util.List;
+
+public record MeasurementAnalysis(String reportDate,
+                                  List<BigDecimal> measurements,
+                                  long totalCount,
+                                  BigDecimal average,
+                                  BigDecimal lowerBound,
+                                  BigDecimal upperBound,
                                   long outsideTolerance,
                                   long insideTolerance,
-                                  long biggerThanProduct,
+                                  BigDecimal productLength,
+                                  long graterThanUpperBound,
                                   long smallerThanLowerBound,
-                                  double maxMeasurement,
-                                  double minMeasurement,
-                                  double difference,
-                                  Iterable<Double> sortedMeasurements) {
+                                  BigDecimal maxMeasurement,
+                                  BigDecimal minMeasurement,
+                                  BigDecimal difference,
+                                  Iterable<BigDecimal> sortedMeasurements) {
 }
