@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public record MeasurementAnalysis(String reportDate,
+                                  BigDecimal posTolerance,
+                                  BigDecimal negTolerance,
                                   List<BigDecimal> measurements,
                                   long totalCount,
                                   BigDecimal average,

@@ -54,6 +54,8 @@ public class MeasurementCalculator {
 
         return new MeasurementAnalysis(
                 getFormattedDate(),
+                posTolerance,
+                negTolerance,
                 measurements,
                 totalCount,
                 round(average),
