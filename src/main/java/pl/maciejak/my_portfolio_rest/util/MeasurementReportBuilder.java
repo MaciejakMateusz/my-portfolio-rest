@@ -4,19 +4,16 @@ import org.springframework.stereotype.Component;
 import pl.maciejak.my_portfolio_rest.dto.MeasurementAnalysis;
 import pl.maciejak.my_portfolio_rest.dto.MeasurementsDTO;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 @Component
 public class MeasurementReportBuilder {
 
     public String buildReport(MeasurementsDTO measurementsDTO, MeasurementAnalysis analysis) {
         StringBuilder result = new StringBuilder();
-        String formattedDate = getFormattedDate();
+        String formattedDate = analysis.reportDate();
 
         result.append("Measurement session date: ").append(formattedDate).append("\n\n");
 
-        result.append("All measurements(mm): ").append(measurementsDTO.measurements()).append("\n\n");
+        result.append("All measurements (mm): ").append(measurementsDTO.measurements()).append("\n\n");
 
         result.append("Amount measured: ")
                 .append(analysis.totalCount())
@@ -26,7 +23,6 @@ public class MeasurementReportBuilder {
                 .append(String.format("%.2f", analysis.average()))
                 .append("mm\n\n");
 
-        result.append("TOLERANCE DATA\n");
         result.append("Outside tolerance: ")
                 .append(analysis.outsideTolerance())
                 .append(" piece(s)\n");
@@ -35,10 +31,10 @@ public class MeasurementReportBuilder {
                 .append(analysis.insideTolerance())
                 .append(" piece(s)\n");
 
-        result.append("Bigger than ")
-                .append(measurementsDTO.productLength())
+        result.append("Greater than ")
+                .append(analysis.upperBound())
                 .append("mm: ")
-                .append(analysis.biggerThanProduct())
+                .append(analysis.graterThanUpperBound())
                 .append(" piece(s)\n");
 
         result.append("Smaller than ")
@@ -47,7 +43,7 @@ public class MeasurementReportBuilder {
                 .append(analysis.smallerThanLowerBound())
                 .append(" piece(s)\n\n");
 
-        result.append("Biggest measurement: ")
+        result.append("Greatest measurement: ")
                 .append(analysis.maxMeasurement())
                 .append("mm\n");
 
@@ -65,9 +61,5 @@ public class MeasurementReportBuilder {
         return result.toString();
     }
 
-    private String getFormattedDate() {
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        return now.format(formatter);
-    }
+
 }
