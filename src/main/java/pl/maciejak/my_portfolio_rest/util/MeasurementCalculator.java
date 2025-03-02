@@ -1,7 +1,7 @@
 package pl.maciejak.my_portfolio_rest.util;
 
 import org.springframework.stereotype.Component;
-import pl.maciejak.my_portfolio_rest.dto.MeasurementStatistics;
+import pl.maciejak.my_portfolio_rest.dto.MeasurementAnalysis;
 import pl.maciejak.my_portfolio_rest.dto.MeasurementsDTO;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 public class MeasurementCalculator {
 
-    public MeasurementStatistics calculate(MeasurementsDTO measurementsDTO) {
+    public MeasurementAnalysis calculate(MeasurementsDTO measurementsDTO) {
         Double productLength = measurementsDTO.productLength();
         Double posTolerance = measurementsDTO.posTolerance();
         Double negTolerance = measurementsDTO.negTolerance();
@@ -49,7 +49,7 @@ public class MeasurementCalculator {
         List<Double> sortedMeasurements = new ArrayList<>(measurements);
         Collections.sort(sortedMeasurements);
 
-        return new MeasurementStatistics(
+        return new MeasurementAnalysis(
                 totalCount,
                 average,
                 lowerBound,

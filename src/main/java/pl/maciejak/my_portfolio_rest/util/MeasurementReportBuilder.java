@@ -1,7 +1,7 @@
 package pl.maciejak.my_portfolio_rest.util;
 
 import org.springframework.stereotype.Component;
-import pl.maciejak.my_portfolio_rest.dto.MeasurementStatistics;
+import pl.maciejak.my_portfolio_rest.dto.MeasurementAnalysis;
 import pl.maciejak.my_portfolio_rest.dto.MeasurementsDTO;
 
 import java.time.LocalDateTime;
@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class MeasurementReportBuilder {
 
-    public String buildReport(MeasurementsDTO measurementsDTO, MeasurementStatistics stats) {
+    public String buildReport(MeasurementsDTO measurementsDTO, MeasurementAnalysis analysis) {
         StringBuilder result = new StringBuilder();
         String formattedDate = getFormattedDate();
 
@@ -19,48 +19,48 @@ public class MeasurementReportBuilder {
         result.append("All measurements(mm): ").append(measurementsDTO.measurements()).append("\n\n");
 
         result.append("Amount measured: ")
-                .append(stats.totalCount())
+                .append(analysis.totalCount())
                 .append(" piece(s)\n");
 
         result.append("Average of all measurements: ")
-                .append(String.format("%.2f", stats.average()))
+                .append(String.format("%.2f", analysis.average()))
                 .append("mm\n\n");
 
         result.append("TOLERANCE DATA\n");
         result.append("Outside tolerance: ")
-                .append(stats.outsideTolerance())
+                .append(analysis.outsideTolerance())
                 .append(" piece(s)\n");
 
         result.append("Inside tolerance: ")
-                .append(stats.insideTolerance())
+                .append(analysis.insideTolerance())
                 .append(" piece(s)\n");
 
         result.append("Bigger than ")
                 .append(measurementsDTO.productLength())
                 .append("mm: ")
-                .append(stats.biggerThanProduct())
+                .append(analysis.biggerThanProduct())
                 .append(" piece(s)\n");
 
         result.append("Smaller than ")
-                .append(stats.lowerBound())
+                .append(analysis.lowerBound())
                 .append("mm: ")
-                .append(stats.smallerThanLowerBound())
+                .append(analysis.smallerThanLowerBound())
                 .append(" piece(s)\n\n");
 
         result.append("Biggest measurement: ")
-                .append(stats.maxMeasurement())
+                .append(analysis.maxMeasurement())
                 .append("mm\n");
 
         result.append("Smallest measurement: ")
-                .append(stats.minMeasurement())
+                .append(analysis.minMeasurement())
                 .append("mm\n");
 
         result.append("The difference between the smallest and the biggest measurement: ")
-                .append(stats.difference())
+                .append(analysis.difference())
                 .append("mm\n\n");
 
         result.append("Measurements sorted ascending: ")
-                .append(stats.sortedMeasurements());
+                .append(analysis.sortedMeasurements());
 
         return result.toString();
     }
