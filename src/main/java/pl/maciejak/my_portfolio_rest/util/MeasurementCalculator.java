@@ -4,6 +4,10 @@ import org.springframework.stereotype.Component;
 import pl.maciejak.my_portfolio_rest.dto.MeasurementAnalysis;
 import pl.maciejak.my_portfolio_rest.dto.MeasurementsDTO;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,56 +16,68 @@ import java.util.List;
 public class MeasurementCalculator {
 
     public MeasurementAnalysis calculate(MeasurementsDTO measurementsDTO) {
-        Double productLength = measurementsDTO.productLength();
-        Double posTolerance = measurementsDTO.posTolerance();
-        Double negTolerance = measurementsDTO.negTolerance();
-        List<Double> measurements = measurementsDTO.measurements();
+        BigDecimal productLength = measurementsDTO.productLength();
+        BigDecimal posTolerance = measurementsDTO.posTolerance();
+        BigDecimal negTolerance = measurementsDTO.negTolerance();
+        List<BigDecimal> measurements = measurementsDTO.measurements();
 
-        int totalCount = measurements.size();
-        double average = measurements.stream()
-                .mapToDouble(Double::doubleValue)
-                .average()
-                .orElse(0.0);
+        long totalCount = measurements.size();
+        BigDecimal sum = measurements.stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal average = sum.divide(BigDecimal.valueOf(measurements.size()), RoundingMode.HALF_UP);
 
-        double lowerBound = productLength - negTolerance;
-        double upperBound = productLength + posTolerance;
+        BigDecimal lowerBound = productLength.add(negTolerance);
+        BigDecimal upperBound = productLength.add(posTolerance);
 
-        long outsideTolerance = measurements.stream()
-                .filter(m -> m < lowerBound || m > upperBound)
+        long outsideTolerance = (int) measurements.stream()
+                .filter(m -> m.compareTo(lowerBound) < 0 || m.compareTo(upperBound) > 0)
                 .count();
         long insideTolerance = totalCount - outsideTolerance;
 
-        long biggerThanProduct = measurements.stream()
-                .filter(m -> m > productLength)
+        long greaterThanUpperBound = measurements.stream()
+                .filter(m -> m.compareTo(upperBound) > 0)
                 .count();
         long smallerThanLowerBound = measurements.stream()
-                .filter(m -> m < lowerBound)
+                .filter(m -> m.compareTo(lowerBound) < 0)
                 .count();
 
-        Double maxMeasurement = measurements.stream()
-                .max(Double::compareTo)
-                .orElse(0.0);
-        Double minMeasurement = measurements.stream()
-                .min(Double::compareTo)
-                .orElse(0.0);
-        double difference = maxMeasurement - minMeasurement;
+        BigDecimal maxMeasurement = measurements.stream()
+                .max(BigDecimal::compareTo)
+                .orElse(BigDecimal.ZERO);
+        BigDecimal minMeasurement = measurements.stream()
+                .min(BigDecimal::compareTo)
+                .orElse(BigDecimal.ZERO);
+        BigDecimal difference = maxMeasurement.min(minMeasurement);
 
-        List<Double> sortedMeasurements = new ArrayList<>(measurements);
+        List<BigDecimal> sortedMeasurements = new ArrayList<>(measurements);
         Collections.sort(sortedMeasurements);
 
         return new MeasurementAnalysis(
+                getFormattedDate(),
+                measurements,
                 totalCount,
-                average,
-                lowerBound,
-                upperBound,
+                round(average),
+                round(lowerBound),
+                round(upperBound),
                 outsideTolerance,
                 insideTolerance,
-                biggerThanProduct,
+                round(productLength),
+                greaterThanUpperBound,
                 smallerThanLowerBound,
-                maxMeasurement,
-                minMeasurement,
-                difference,
+                round(maxMeasurement),
+                round(minMeasurement),
+                round(difference),
                 sortedMeasurements
         );
+    }
+
+    private static String getFormattedDate() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return now.format(formatter);
+    }
+
+    private static BigDecimal round(BigDecimal value) {
+        return value.setScale(3, RoundingMode.HALF_UP);
     }
 }
