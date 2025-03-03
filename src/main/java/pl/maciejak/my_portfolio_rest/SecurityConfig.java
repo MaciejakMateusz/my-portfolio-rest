@@ -44,7 +44,6 @@ public class SecurityConfig {
             corsConfiguration.setAllowedMethods(List.of("*"));
             corsConfiguration.setAllowedHeaders(List.of("*"));
             corsConfiguration.addAllowedOriginPattern("*");
-            corsConfiguration.setAllowCredentials(true);
             return corsConfiguration;
         }));
 
