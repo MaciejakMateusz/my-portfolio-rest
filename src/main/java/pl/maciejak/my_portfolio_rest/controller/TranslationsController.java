@@ -13,12 +13,12 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/translate")
+@RequestMapping("/api/translator")
 public class TranslationsController {
 
     private final TranslationsService translationsService;
 
-    @PostMapping
+    @PostMapping("/translate")
     public ResponseEntity<?> translate(@RequestBody Map<String, Object> params) {
         return translationsService.translate(params);
     }

@@ -2,10 +2,7 @@ package pl.maciejak.my_portfolio_rest.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import pl.maciejak.my_portfolio_rest.service.interfaces.TranslationsService;
@@ -32,11 +29,16 @@ public class TranslationsServiceImpl implements TranslationsService {
 
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(params, headers);
 
-        return restTemplate.exchange(
+        ResponseEntity<?> response = restTemplate.exchange(
                 "https://api-free.deepl.com/v2/translate",
                 HttpMethod.POST,
                 entity,
                 String.class
         );
+
+        if (response.getStatusCode() != HttpStatus.OK) {
+            return ResponseEntity.internalServerError().body("An error occurred while communicating with DeepL API.");
+        }
+        return ResponseEntity.ok(response.getBody());
     }
 }
