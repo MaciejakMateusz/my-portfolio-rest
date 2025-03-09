@@ -7,6 +7,7 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfWriter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
@@ -24,7 +25,12 @@ public class PdfGenerator {
             PdfWriter.getInstance(document, baos);
             document.open();
 
-            BaseFont baseFont = BaseFont.createFont("src/main/resources/fonts/DejaVuSans.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+            ClassPathResource fontResource = new ClassPathResource("fonts/DejaVuSans.ttf");
+            BaseFont baseFont = BaseFont.createFont(
+                    fontResource.getURL().toExternalForm(),
+                    BaseFont.IDENTITY_H,
+                    BaseFont.EMBEDDED
+            );
             Font font = new Font(baseFont, 12, Font.NORMAL);
             document.add(new Paragraph(reportContent, font));
 
