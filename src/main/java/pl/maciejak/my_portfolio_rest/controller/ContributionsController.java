@@ -12,12 +12,12 @@ import pl.maciejak.my_portfolio_rest.service.interfaces.ContributionsService;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/contributions")
 public class ContributionsController {
 
     private final ContributionsService contributionsService;
 
-    @PostMapping("/contributions")
+    @PostMapping
     public ResponseEntity<?> contributions(@RequestBody YearRange range) {
         return contributionsService.getContributions(range);
     }
