@@ -59,7 +59,7 @@ public class MeasurementReportBuilder {
         result.append(msgProvider.getLocalizedMsg("tolMeasure.greaterThan", null))
                 .append(analysis.upperBound())
                 .append(" mm: ")
-                .append(analysis.graterThanUpperBound())
+                .append(analysis.greaterThanUpperBound())
                 .append(msgProvider.getLocalizedMsg("tolMeasure.pieces", null))
                 .append("\n");
 
