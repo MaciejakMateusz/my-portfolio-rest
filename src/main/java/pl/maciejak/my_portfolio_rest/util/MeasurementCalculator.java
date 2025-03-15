@@ -47,7 +47,7 @@ public class MeasurementCalculator {
         BigDecimal minMeasurement = measurements.stream()
                 .min(BigDecimal::compareTo)
                 .orElse(BigDecimal.ZERO);
-        BigDecimal difference = maxMeasurement.min(minMeasurement);
+        BigDecimal difference = maxMeasurement.subtract(minMeasurement);
 
         List<BigDecimal> sortedMeasurements = new ArrayList<>(measurements);
         Collections.sort(sortedMeasurements);
