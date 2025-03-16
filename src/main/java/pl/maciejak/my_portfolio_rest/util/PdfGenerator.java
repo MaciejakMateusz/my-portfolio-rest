@@ -18,28 +18,30 @@ import java.io.IOException;
 public class PdfGenerator {
 
     public byte[] generatePdf(String reportContent) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         try {
             Document document = new Document();
-            PdfWriter.getInstance(document, baos);
+            PdfWriter.getInstance(document, outputStream);
+
             document.open();
-
-            ClassPathResource fontResource = new ClassPathResource("fonts/DejaVuSans.ttf");
-            BaseFont baseFont = BaseFont.createFont(
-                    fontResource.getURL().toExternalForm(),
-                    BaseFont.IDENTITY_H,
-                    BaseFont.EMBEDDED
-            );
-            Font font = new Font(baseFont, 12, Font.NORMAL);
-            document.add(new Paragraph(reportContent, font));
-
+            document.add(new Paragraph(reportContent, getFont()));
             document.close();
         } catch (DocumentException | IOException e) {
             log.error("Error generating PDF: {}", e.getMessage(), e);
             throw new RuntimeException("PDF generation failed", e);
         }
 
-        return baos.toByteArray();
+        return outputStream.toByteArray();
+    }
+
+    private static Font getFont() throws IOException, DocumentException {
+        ClassPathResource fontResource = new ClassPathResource("fonts/DejaVuSans.ttf");
+        BaseFont baseFont = BaseFont.createFont(
+                fontResource.getURL().toExternalForm(),
+                BaseFont.IDENTITY_H,
+                BaseFont.EMBEDDED
+        );
+        return new Font(baseFont, 12, Font.NORMAL);
     }
 }
