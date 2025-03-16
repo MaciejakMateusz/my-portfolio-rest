@@ -20,4 +20,11 @@ public class TestsDataRepository {
                         BigDecimal.valueOf(60),
                         BigDecimal.valueOf(60.9)));
     }
+
+    protected static MeasurementsDTO getInvalidMeasurementsDTO() {
+        return new MeasurementsDTO(null,
+                BigDecimal.valueOf(0.1),
+                BigDecimal.valueOf(-0.5),
+                List.of(BigDecimal.valueOf(60.1)));
+    }
 }
