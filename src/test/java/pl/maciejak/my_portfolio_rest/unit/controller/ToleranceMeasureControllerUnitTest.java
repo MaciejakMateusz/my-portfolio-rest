@@ -8,11 +8,15 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import pl.maciejak.my_portfolio_rest.controller.ResponseHelper;
 import pl.maciejak.my_portfolio_rest.controller.ToleranceMeasureController;
 import pl.maciejak.my_portfolio_rest.dto.MeasurementsDTO;
 import pl.maciejak.my_portfolio_rest.service.interfaces.ToleranceMeasureService;
 import pl.maciejak.my_portfolio_rest.util.TestsDataRepository;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,8 +33,9 @@ class ToleranceMeasureControllerUnitTest extends TestsDataRepository {
 
     @BeforeEach
     void setup() {
-        closeable = MockitoAnnotations.openMocks(this);
-        controller = new ToleranceMeasureController(toleranceMeasureService);
+        this.closeable = MockitoAnnotations.openMocks(this);
+        ResponseHelper responseHelper = Mockito.mock(ResponseHelper.class);
+        this.controller = new ToleranceMeasureController(toleranceMeasureService, responseHelper);
     }
 
     @AfterEach
@@ -39,14 +44,33 @@ class ToleranceMeasureControllerUnitTest extends TestsDataRepository {
     }
 
     @Test
-    void shouldCalculate() {
+    void whenValidData_shouldCalculate() {
         MeasurementsDTO measurements = getMeasurementsDTO();
-        Mockito.doReturn(ResponseEntity.ok("Calculation successful"))
+        String successMsg = "Calculation successful";
+        Mockito.doReturn(ResponseEntity.ok(successMsg))
                 .when(toleranceMeasureService).calculate(any());
+        BindingResult bindingResult = new BeanPropertyBindingResult(measurements, "measurements");
 
-        ResponseEntity<?> response = controller.calculate(measurements);
+        ResponseEntity<?> response = controller.calculate(measurements, bindingResult);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Calculation successful", response.getBody());
+        assertEquals(successMsg, response.getBody());
+    }
+
+    @Test
+    void whenInvalidData_shouldNotCalculate() {
+        MeasurementsDTO measurements = getInvalidMeasurementsDTO();
+        String errorMsg = "Measurements are invalid";
+        Mockito.doReturn(ResponseEntity.badRequest().body(errorMsg))
+                .when(toleranceMeasureService).calculate(any());
+
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(measurements, "measurements");
+        bindingResult.recordFieldValue("productLength", MeasurementsDTO.class, null);
+        bindingResult.recordFieldValue("posTolerance", MeasurementsDTO.class, BigDecimal.valueOf(-0.5));
+
+        ResponseEntity<?> response = controller.calculate(measurements, bindingResult);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(errorMsg, response.getBody());
     }
 }
