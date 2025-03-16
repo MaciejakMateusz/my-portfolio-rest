@@ -22,31 +22,19 @@ public class MeasurementCalculator {
         List<BigDecimal> measurements = measurementsDTO.measurements();
 
         long totalCount = measurements.size();
-        BigDecimal sum = measurements.stream()
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal average = sum.divide(BigDecimal.valueOf(measurements.size()), RoundingMode.HALF_UP);
+        BigDecimal average = getAverage(measurements);
 
         BigDecimal lowerBound = productLength.add(negTolerance);
         BigDecimal upperBound = productLength.add(posTolerance);
 
-        long outsideTolerance = (int) measurements.stream()
-                .filter(m -> m.compareTo(lowerBound) < 0 || m.compareTo(upperBound) > 0)
-                .count();
+        long outsideTolerance = getOutsideTolerance(measurements, lowerBound, upperBound);
         long insideTolerance = totalCount - outsideTolerance;
 
-        long greaterThanUpperBound = measurements.stream()
-                .filter(m -> m.compareTo(upperBound) > 0)
-                .count();
-        long smallerThanLowerBound = measurements.stream()
-                .filter(m -> m.compareTo(lowerBound) < 0)
-                .count();
+        long greaterThanUpperBound = getGreaterThanUpperBound(measurements, upperBound);
+        long smallerThanLowerBound = getSmallerThanLowerBound(measurements, lowerBound);
 
-        BigDecimal maxMeasurement = measurements.stream()
-                .max(BigDecimal::compareTo)
-                .orElse(BigDecimal.ZERO);
-        BigDecimal minMeasurement = measurements.stream()
-                .min(BigDecimal::compareTo)
-                .orElse(BigDecimal.ZERO);
+        BigDecimal maxMeasurement = getMaxMeasurement(measurements);
+        BigDecimal minMeasurement = getMinMeasurement(measurements);
         BigDecimal difference = maxMeasurement.subtract(minMeasurement);
 
         List<BigDecimal> sortedMeasurements = new ArrayList<>(measurements);
@@ -71,6 +59,42 @@ public class MeasurementCalculator {
                 round(difference),
                 sortedMeasurements
         );
+    }
+
+    private static BigDecimal getAverage(List<BigDecimal> measurements) {
+        BigDecimal sum = measurements.stream()
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return sum.divide(BigDecimal.valueOf(measurements.size()), RoundingMode.HALF_UP);
+    }
+
+    private static long getOutsideTolerance(List<BigDecimal> measurements, BigDecimal lowerBound, BigDecimal upperBound) {
+        return (int) measurements.stream()
+                .filter(m -> m.compareTo(lowerBound) < 0 || m.compareTo(upperBound) > 0)
+                .count();
+    }
+
+    private static long getGreaterThanUpperBound(List<BigDecimal> measurements, BigDecimal upperBound) {
+        return measurements.stream()
+                .filter(m -> m.compareTo(upperBound) > 0)
+                .count();
+    }
+
+    private static long getSmallerThanLowerBound(List<BigDecimal> measurements, BigDecimal lowerBound) {
+        return measurements.stream()
+                .filter(m -> m.compareTo(lowerBound) < 0)
+                .count();
+    }
+
+    private static BigDecimal getMaxMeasurement(List<BigDecimal> measurements) {
+        return measurements.stream()
+                .max(BigDecimal::compareTo)
+                .orElse(BigDecimal.ZERO);
+    }
+
+    private static BigDecimal getMinMeasurement(List<BigDecimal> measurements) {
+        return measurements.stream()
+                .min(BigDecimal::compareTo)
+                .orElse(BigDecimal.ZERO);
     }
 
     private static String getFormattedDate() {
