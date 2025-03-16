@@ -16,6 +16,7 @@ import java.util.TreeSet;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Utility class designed to simplify making HTTP requests to REST API in test environment.
@@ -71,6 +72,19 @@ public class ApiRequestUtils {
         TypeReference<Map<String, Object>> typeReference = new TypeReference<>() {
         };
         return objectMapper.readValue(responseBody, typeReference);
+    }
+
+    /**
+     * Performs a POST HTTP request to the specified URL with the provided object and expects error responses.
+     *
+     * @param url The URL to which the POST request will be sent.
+     * @param t   The object to be sent as part of the request.
+     * @param <T> The type of the object.
+     * @return A map containing error responses received from the server.
+     * @throws Exception If an error occurs during the request.
+     */
+    public <T> Map<?, ?> postAndExpectErrors(String url, T t) throws Exception {
+        return postAndReturnResponseBody(url, t, status().isBadRequest());
     }
 
     /**
