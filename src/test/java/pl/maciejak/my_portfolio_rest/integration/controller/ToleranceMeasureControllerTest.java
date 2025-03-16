@@ -31,7 +31,7 @@ class ToleranceMeasureControllerTest extends TestsDataRepository {
     private MockMvc mockMvc;
 
     @Test
-    void shouldCalculate() throws Exception {
+    void whenValidData_shouldCalculate() throws Exception {
         MeasurementsDTO measurements = getMeasurementsDTO();
         Map<?, ?> response = apiRequestUtils.postAndReturnResponseBody(
                 "/api/tolerance-measure/calculate", measurements, status().isOk());
@@ -46,6 +46,18 @@ class ToleranceMeasureControllerTest extends TestsDataRepository {
         assertEquals(1, analysis.get("greaterThanUpperBound"));
         assertEquals(1, analysis.get("smallerThanLowerBound"));
         assertEquals(1.5, analysis.get("difference"));
+    }
+
+    @Test
+    void whenInvalidData_shouldNotCalculate() throws Exception {
+        MeasurementsDTO measurements = getInvalidMeasurementsDTO();
+        Map<?, ?> response = apiRequestUtils.postAndExpectErrors(
+                "/api/tolerance-measure/calculate", measurements);
+
+        assertEquals("Pole nie może być puste", response.get("productLength"));
+        assertEquals("Musi być równe lub mniejsze od 0", response.get("negTolerance"));
+        assertEquals("Musi być równe lub większe od 0", response.get("posTolerance"));
+        assertEquals("Wielkość musi należeć do zakresu od 2 do 2147483647", response.get("measurements"));
     }
 
     @Test
