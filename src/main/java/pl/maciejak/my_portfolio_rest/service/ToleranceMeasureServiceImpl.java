@@ -28,7 +28,7 @@ public class ToleranceMeasureServiceImpl implements ToleranceMeasureService {
     @Override
     public ResponseEntity<?> calculate(MeasurementsDTO measurementsDTO) {
         MeasurementAnalysis analysis = measurementCalculator.calculate(measurementsDTO);
-        String reportContent = reportBuilder.buildReport(measurementsDTO, analysis);
+        String reportContent = reportBuilder.buildReport(analysis);
         byte[] pdfBytes = pdfGenerator.generatePdf(reportContent);
         String base64Pdf = Base64.getEncoder().encodeToString(pdfBytes);
 

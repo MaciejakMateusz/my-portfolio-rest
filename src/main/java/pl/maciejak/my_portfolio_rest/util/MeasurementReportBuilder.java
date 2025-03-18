@@ -3,7 +3,6 @@ package pl.maciejak.my_portfolio_rest.util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import pl.maciejak.my_portfolio_rest.dto.MeasurementAnalysis;
-import pl.maciejak.my_portfolio_rest.dto.MeasurementsDTO;
 
 @Component
 @RequiredArgsConstructor
@@ -11,13 +10,13 @@ public class MeasurementReportBuilder {
 
     private final MsgProvider msgProvider;
 
-    public String buildReport(MeasurementsDTO measurementsDTO, MeasurementAnalysis analysis) {
+    public String buildReport(MeasurementAnalysis analysis) {
         StringBuilder result = new StringBuilder();
         String formattedDate = analysis.reportDate();
 
         result.append(msgProvider.getLocalizedMsg("tolMeasure.sessionDate", null))
                 .append(formattedDate)
-                .append(" \n\n");
+                .append("\n\n");
 
         result.append(msgProvider.getLocalizedMsg("tolMeasure.productData", null))
                 .append("\n");
@@ -34,7 +33,7 @@ public class MeasurementReportBuilder {
         result.append(msgProvider.getLocalizedMsg("tolMeasure.measurementsData", null))
                 .append("\n");
         result.append(msgProvider.getLocalizedMsg("tolMeasure.allMeasurements", null))
-                .append(measurementsDTO.measurements())
+                .append(analysis.measurements())
                 .append("\n\n");
 
         result.append(msgProvider.getLocalizedMsg("tolMeasure.amountMeasured", null))
