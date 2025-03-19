@@ -36,4 +36,4 @@ build/
 instruction
 
 ### TODO helper ###
-src/main/java/pl/maciejak/my_portfolio_rest/utility/ToDo.java
+/src/main/java/ToDo.java
