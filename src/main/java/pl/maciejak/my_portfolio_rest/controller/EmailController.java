@@ -19,7 +19,7 @@ public class EmailController {
     private final EmailService emailService;
 
     @PostMapping
-    public ResponseEntity<?> countries(@RequestBody Map<String, String> params) {
+    public ResponseEntity<?> sendEmail(@RequestBody Map<String, String> params) {
         return emailService.send(params);
     }
 
