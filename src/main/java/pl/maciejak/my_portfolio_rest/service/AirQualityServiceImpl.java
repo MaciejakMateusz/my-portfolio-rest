@@ -61,8 +61,8 @@ public class AirQualityServiceImpl implements AirQualityService {
 
         for (String id : ids) {
             String url = String.format(
-                    "https://api.openaq.org/v3/sensors/%s/days?date_from=%s&date_to=%s",
-                    id.trim(), dateFrom, dateTo
+                    "%s/sensors/%s/days?date_from=%s&date_to=%s",
+                    openaqUrl, id.trim(), dateFrom, dateTo
             );
             ResponseEntity<String> response = executeGetRequest(url);
             if (!response.getStatusCode().is2xxSuccessful()) {
