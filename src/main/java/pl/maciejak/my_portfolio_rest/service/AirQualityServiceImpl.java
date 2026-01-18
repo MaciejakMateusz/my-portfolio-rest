@@ -19,7 +19,7 @@ public class AirQualityServiceImpl implements AirQualityService {
     @Value("${openaq.key}")
     private String openaqKey;
 
-    @Value("${openaq.url}")
+    @Value("${openaq.url:https://api.openaq.org/v3}")
     private String openaqUrl;
 
     private final RestTemplate restTemplate;
