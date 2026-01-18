@@ -42,7 +42,7 @@ public class AirQualityServiceImpl implements AirQualityService {
     @Override
     public ResponseEntity<?> getLocations(Integer countryId) {
         String url = String.format(
-                "%s/locations?countries_id=%d&limit=100&page=1",
+                "%s/locations?parameters_id=2137,2,8,7,10,9&countries_id=%d&limit=100&page=1",
                 openaqUrl,
                 countryId
         );
