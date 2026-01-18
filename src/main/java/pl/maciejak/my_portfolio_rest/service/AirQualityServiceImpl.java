@@ -26,7 +26,10 @@ public class AirQualityServiceImpl implements AirQualityService {
     private final ObjectMapper objectMapper;
 
     public AirQualityServiceImpl(RestTemplateBuilder restTemplateBuilder) {
-        this.restTemplate = restTemplateBuilder.build();
+        this.restTemplate = restTemplateBuilder
+                .connectTimeout(java.time.Duration.ofSeconds(5))
+                .readTimeout(java.time.Duration.ofSeconds(15))
+                .build();
         this.objectMapper = new ObjectMapper();
     }
 
