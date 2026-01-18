@@ -80,16 +80,17 @@ public class AirQualityServiceImpl implements AirQualityService {
 
     private ResponseEntity<String> executeGetRequest(String url) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("X-API-Key", openaqKey);
+        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
 
         HttpEntity<Void> entity = new HttpEntity<>(headers);
+
         try {
             return restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+        } catch (org.springframework.web.client.HttpStatusCodeException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsString());
         } catch (RestClientException e) {
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
